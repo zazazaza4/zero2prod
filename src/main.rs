@@ -1,24 +1,9 @@
-use actix_web::{App, HttpRequest, HttpResponse, HttpServer, Responder, web};
+use std::net::TcpListener;
+use zero2prod::run;
 
-async fn health_check() -> impl Responder {
-    HttpResponse::Ok()
-}
-
-async fn greet(req: HttpRequest) -> impl Responder {
-    let name = req.match_info().get("name").unwrap_or("World");
-
-    format!("Hello {}!", &name)
-}
-
-#[actix_web::main]
+#[tokio::main]
 async fn main() -> std::io::Result<()> {
-    HttpServer::new(|| {
-        App::new()
-            .route("/", web::get().to(greet))
-            .route("/health_check", web::get().to(health_check))
-            .route("/{name}", web::get().to(greet))
-    })
-    .bind(("127.0.0.1", 8080))?
-    .run()
-    .await
+    let listener = TcpListener::bind("127.0.0.1:8000").expect("Failed to bind the port");
+
+    run(listener)?.await
 }
