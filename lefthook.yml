@@ -1,0 +1,12 @@
+pre-commit:
+  jobs:
+    - name: formatting
+      run: cargo fmt --check
+
+pre-push:
+  parallel: false
+  jobs:
+    - name: clippy
+      run: cargo clippy --all-targets -- -D warnings
+    - name: tests
+      run: cargo test --all-features --locked

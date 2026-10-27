@@ -43,6 +43,32 @@ cargo install cargo-audit --locked
 cargo audit
 ```
 
+## Git hooks
+
+Install [Lefthook](https://lefthook.dev/installation/) once, then enable the
+hooks in each clone. On macOS:
+
+```sh
+brew install lefthook
+lefthook install
+```
+
+Before each commit, Lefthook runs `cargo fmt --check`. Before each push, it
+runs Clippy and the tests sequentially using the commands above. These checks
+run against the working tree, so unstaged Rust changes can also cause failures.
+Formatting is checked without modifying files; run `cargo fmt` to fix failures,
+then review and stage the changes.
+
+To run the hooks manually:
+
+```sh
+lefthook run pre-commit --force
+lefthook run pre-push --force
+```
+
+The configuration lives in `lefthook.yml`. CI continues to run independently
+of local hooks.
+
 ## Project layout
 
 ```text

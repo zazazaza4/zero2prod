@@ -21,6 +21,7 @@ actix-web = { version = "4.18.1", default-features = false, features = [
     "compat",
     "ws",
 ] }
+serde = { version = "1.0.229", features = ["derive"] }
 tokio = { version = "1.54.1", features = ["full"] }
 
 [dev-dependencies]
