@@ -1,0 +1,27 @@
+[
+  {
+    "label": "Run server",
+    "command": "cargo",
+    "args": ["run", "--locked"]
+  },
+  {
+    "label": "Test",
+    "command": "cargo",
+    "args": ["test", "--all-features", "--locked"]
+  },
+  {
+    "label": "Check formatting",
+    "command": "cargo",
+    "args": ["fmt", "--check"]
+  },
+  {
+    "label": "Clippy",
+    "command": "cargo",
+    "args": ["clippy", "--all-targets", "--", "-D", "warnings"]
+  },
+  {
+    "label": "Build documentation",
+    "command": "cargo",
+    "args": ["doc", "--no-deps", "--all-features", "--locked"]
+  }
+]
