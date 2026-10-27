@@ -10,6 +10,7 @@ async fn health_check() -> impl Responder {
 }
 
 #[derive(serde::Deserialize)]
+#[expect(dead_code, reason = "Subscription persistence is not implemented yet")]
 struct FormData {
     email: String,
     name: String,
