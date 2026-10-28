@@ -37,13 +37,54 @@ jobs:
       - run: cargo clippy --all-targets -- -D warnings
 
   test:
+    name: Test
     needs: format
     runs-on: ubuntu-latest
+    env:
+      SQLX_VERSION: "0.8.6"
+      SQLX_FEATURES: "rustls,postgres"
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: newsletter
+      POSTGRES_PORT: "5432"
+      DATABASE_URL: postgres://postgres:password@localhost:5432/newsletter
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
-      - run: cargo test --all-features --locked
+      - name: Install sqlx-cli
+        run: >-
+          cargo install sqlx-cli
+          --version "${SQLX_VERSION}"
+          --features "${SQLX_FEATURES}"
+          --no-default-features
+          --locked
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes postgresql-client
+      - name: Migrate database
+        run: bash ./scripts/init_db.sh
+        env:
+          SKIP_DOCKER: "true"
+      - name: Run tests
+        run: cargo test --all-features --locked
+      - name: Check that queries are fresh
+        run: cargo sqlx prepare --workspace --check -- --all-targets --all-features --locked
 
   doc:
     runs-on: ubuntu-latest
