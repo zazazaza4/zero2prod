@@ -24,6 +24,8 @@ actix-web = { version = "4.18.1", default-features = false, features = [
 serde = { version = "1.0.229", features = ["derive"] }
 tokio = { version = "1.54.1", features = ["full"] }
 config = "0.11"
+uuid = { version = "1", features = ["v4"] }
+chrono = "0.4.15"
 
 [dependencies.sqlx]
 version = "0.8.2"
